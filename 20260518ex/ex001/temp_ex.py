@@ -193,3 +193,4 @@ while flag:
         editMemberInfo()
     elif num == 99:
         flag = False
+        print('종료되었습니다.')
