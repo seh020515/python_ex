@@ -14,6 +14,7 @@ from member import session
 from db import member_db
 from member import member_dumy
 from db import diary_db
+from datetime import datetime
 import copy
 
 if config.DEV_MOD:
@@ -35,12 +36,14 @@ while flag:
         uPw = input('please input new member PW: ')
         uMail = input('please input new member Mail: ')
         uPhone = input('please input new member Phone Number: ')
-        
+        uRegData = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
         member_db.memberDB[uId] = {
             'uId' : uId,
             'uPw' : uPw,
             'uMail' : uMail,
-            'uPhone' : uPhone
+            'uPhone' : uPhone,
+            'uRegData' : uRegData
             }
         
         print('New member sign-up success!!')

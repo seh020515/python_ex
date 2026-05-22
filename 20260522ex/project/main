@@ -1,0 +1,121 @@
+'''
+1. 회원가입
+2. 로그인
+3. 책 등록
+4. 책 목록 조회
+5. 책 대출
+6. 책 반납
+7. 내 대출 목록
+99. 종료
+'''
+import config
+import memberDB
+import bookDB
+import session
+
+menu = '''
+1. 회원가입    2. 로그인    3. 책 등록    4. 책 목록 조회
+5. 책 대출    6. 책 반납    7. 내 대출 목록    99. 종료
+'''
+flag = True
+
+while flag:
+    selectUserNum = int(input(menu))
+    
+    if selectUserNum == config.SIGN_UP:
+        print('1. 회원 가입')
+        uId = input('회원 ID 입력 : ')
+        uPw = input('회원 비밀번호 입력 : ')
+        uName = input('회원 이름 입력 : ')
+
+        memberDB.members[uId] = {
+            'uId' : uId,
+            'uPw' : uPw,
+            'uName' : uName
+        }
+        print('회원 가입 완료되었습니다.')
+    
+    elif selectUserNum == config.SIGN_IN:
+        print('2. 로그인')
+        uId = input('회원 ID 입력 : ')
+        uPw = input('회원 PW 입력 : ')
+    
+        if uId in memberDB.members:
+            if memberDB.members[uId]['uPw'] == uPw:
+                print('로그인 되었습니다.')
+                session.loginMember = uId
+            else:
+                print('로그인 실패.(비밀번호 오류)')
+        else:
+            print('로그인 실패.(아이디 오류)')
+
+    
+    elif selectUserNum == config.ADD_BOOK:
+        bookName = input('책 제목 : ')
+        author = input('저자 명 : ')
+        
+        bookDB.book[bookName] = {
+            'bookName' : bookName,
+            'author' : author,
+            'isRent' : False,
+            'rentUser' : ''
+        }
+
+    
+    elif selectUserNum == config.SHOW_BOOK:
+        print('책 목록 조회')
+        if session.loginMember == '':
+            print('로그인 후 이용 가능합니다.')
+        else:
+            print('책 목록 조회')
+            for bookName in bookDB.book:
+                print(bookDB.book[bookName])
+    
+    elif selectUserNum == config.RENT_BOOK:
+
+        if session.loginMember == '':
+            print('로그인 후 이용 가능합니다.')
+
+        else:
+            bookName = input('대출할 책 제목 : ')
+
+            if bookName in bookDB.book:
+
+                if bookDB.book[bookName]['isRent'] == False:
+                    print('대출 가능')
+                    bookDB.book[bookName]['isRent'] = True
+                    bookDB.book[bookName]['rentUser'] = session.loginMember
+
+                else:
+                    print('이미 대출 중인 책입니다.')
+
+            else:
+                print('존재하지 않는 책입니다.')
+    
+    elif selectUserNum == config.RETURN_BOOK:
+        if session.loginMember == '':
+            print('로그인 후 이용 가능합니다.')
+
+        else:
+            bookName = input('반납할 책 제목 : ')
+            if bookDB.book[bookName]['isRent'] == True:
+                print('반납 완료')
+                bookDB.book[bookName]['isRent'] = False
+                bookDB.book[bookName]['rentUser'] = ''
+    
+    elif selectUserNum == config.MY_BOOK:
+
+        if session.loginMember == '':
+            print('로그인 후 이용 가능합니다.')
+
+        else:
+            print('내 대출 목록')
+
+            for bookName in bookDB.book:
+
+                if bookDB.book[bookName]['rentUser'] == session.loginMember:
+                    print(bookName)
+    
+    elif selectUserNum == config.END:
+        print('프로그램 종료')
+        flag = False

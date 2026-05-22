@@ -5,6 +5,7 @@ ids = ['gildong','chanho']
 pws = ['1234', '0000']
 mails = ['gildong@gmail.com','chanho@naver.com']
 phones = ['010-1234-5678','010-9012-3456']
+RegDatas = ['2026-05-22 14:33:21','2026-05-22- 15:35:21']
 
 
 
@@ -14,6 +15,7 @@ def dumyInit():
             'uId' : ids[n],
             'uPw' : pws[n],
             'uMail' : mails[n],
-            'uPhone' : phones[n]
+            'uPhone' : phones[n],
+            'uRegData' : RegDatas[n]
         }
         diary_db.diaryDB[ids[n]] = []
